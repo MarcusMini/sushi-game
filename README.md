@@ -10,7 +10,7 @@ In this project I imagine the concept based on the flappy bird video games that 
 
 ### Technology used
 
-Objective-C
-Swift (future for the UI)
+* Objective-C
+* Swift (future for the UI)
 
 
