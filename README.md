@@ -1,4 +1,4 @@
-# sushi-game
+# sushi-game - Code will be upload the 30th of June 
 
 Sushi game is a video game made for iOS
 This project use the spriteKit framework 
