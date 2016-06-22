@@ -27,11 +27,17 @@
     
     SKAction * _animObstacle;
     
+    // ---- DEFINE NODE ---- //
+    
     SKNode * _noeudMouvment;
     SKNode * _bar;
     
     SKNode * _ObstacleGroup;
     SKNode * _sauceNode;
+    SKNode * _dropletNode;
+    SKNode * _scNode;
+    
+    // ---- BOOLEAN ---- //
     
     BOOL _drapRestart;
     BOOL _disableUserInput;
@@ -39,7 +45,10 @@
     SKLabelNode * _scoreCounter;
     SKSpriteNode * _citySprite;
     SKSpriteNode * _aSprite;
+    
     int  _scoreNumber;
+    int _dis;
+    int _posNode;
     
     // create an array of ground array;
     

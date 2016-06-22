@@ -26,6 +26,8 @@ static const uint32_t scoreCategory = 1 << 3;
         _noeudMouvment = [SKNode node];
         _ObstacleGroup = [SKNode node];
         _sauceNode = [SKNode node];
+        _dropletNode = [SKNode node];
+        
         self.physicsWorld.contactDelegate = self;
         int looper = 0;
         int looperCity = 0;
@@ -84,25 +86,26 @@ static const uint32_t scoreCategory = 1 << 3;
         // create new soy sauce
         
         SKAction *soySauceAction = [SKAction performSelector: @selector(createSoySauce) onTarget:self];
-        
-        
         SKAction *pauseSauce = [SKAction waitForDuration: 10.0];
-        
-        
         SKAction *animNewSoySauceObstalce = [SKAction sequence:@[soySauceAction, pauseSauce]];
         
-        
         SKAction *animSauce = [SKAction repeatActionForever: animNewSoySauceObstalce];
+        
+        
+        // create droplet anim
+        
+        SKAction *dropletAction = [SKAction performSelector: @selector(createDropplet) onTarget:self];
+        
+        SKAction *pauseDroplet = [SKAction waitForDuration: 1.0];
+        SKAction *animDropletObstacle = [SKAction sequence: @[dropletAction, pauseDroplet]];
+        
+        SKAction *animDroplet = [SKAction repeatActionForever: animDropletObstacle];
         
         // anim of the city...
         
         SKAction *anim = [SKAction repeatActionForever: [SKAction animateWithTextures: @[user, user_two] timePerFrame:0.2]];
-        
-    
         SKAction *moveLandscape = [SKAction moveByX: -city.size.width * 0.6  y: 0 duration: 0.1 * city.size.width * 1];
-    
         SKAction *resetLand = [SKAction moveByX:city.size.width * 0.6 y:0 duration:0];
-        
         SKAction *animLandscape = [SKAction repeatActionForever: [SKAction sequence: @[moveLandscape, resetLand]]];
         
         
@@ -118,6 +121,9 @@ static const uint32_t scoreCategory = 1 << 3;
         SKAction *resetGround = [SKAction moveByX:myTexture.size.width * 2 y:0 duration:0];
         
         SKAction *animSol = [SKAction repeatActionForever: [SKAction sequence: @[moveGround, resetGround]]];
+        
+        
+        
         
         // add texture to user
         
@@ -203,8 +209,10 @@ static const uint32_t scoreCategory = 1 << 3;
         [_perso setScale: 0.1];
         [_noeudMouvment addChild: _ObstacleGroup];
         [_noeudMouvment addChild: _sauceNode];
+        //[_noeudMouvment addChild: _dropletNode];
         [self runAction: animNouvelObstacleContinu];
         [self runAction: animSauce];
+        [self runAction: animDroplet];
         [self setBackgroundColor: _fond];
         
         
@@ -307,44 +315,72 @@ static const uint32_t scoreCategory = 1 << 3;
 
 -(void) createSoySauce{
     
-    SKNode *scNode = [SKNode node];
+    NSLog(@"created soy ");
     
+    _scNode = [SKNode node];
     SKSpriteNode *soySauceNode = [SKSpriteNode spriteNodeWithTexture: _soySauceBottle];
     
     soySauceNode.position = CGPointMake(self.frame.size.width + 50, (self.frame.size.height - 10));
     soySauceNode.zPosition = -10;
     [soySauceNode setScale: 0.2];
     
-    int dis = (self.frame.size.width + _soySauceBottle.size.width * 2);
+    _dis = (self.frame.size.width + _soySauceBottle.size.width * 2);
     
-    SKAction *moveSauceBottle = [SKAction moveByX : -dis y: 0 duration: 0.01 * dis];
-    
+    SKAction *moveSauceBottle = [SKAction moveByX : - _dis y: 0 duration: 0.01 * _dis];
     SKAction *deleteSauceBottle = [SKAction removeFromParent];
     
     SKAction *animSoy = [SKAction repeatActionForever: [SKAction sequence: @[moveSauceBottle, deleteSauceBottle]]];
     
 
-    [scNode addChild: soySauceNode];
-    [scNode runAction: animSoy];
-    [_sauceNode addChild: scNode];
+    [_scNode addChild: soySauceNode];
+    [_scNode runAction: animSoy];
+    [_sauceNode addChild: _scNode];
     
 }
 
 -(void) createDropplet{
+    
+    NSLog(@"created");
+    
+    CGPoint vPos = [_sauceNode convertPoint:_scNode.position toNode:self];
+   // NSLog(@"%@",NSStringFromCGPoint(vPos));
+    NSLog(@"%f", vPos.x / 2);
+    
     SKNode *parentDroplet = [SKNode node];
     SKSpriteNode *droplet = [SKSpriteNode spriteNodeWithTexture: _droplet];
     
-    droplet.position = CGPointMake(self.frame.size.width + 50, self.frame.size.height);
+    droplet.position = CGPointMake((vPos.x + (self.frame.size.width + 50)), self.frame.size.height);
     droplet.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius: 2];
+    droplet.physicsBody.dynamic = YES;
+    droplet.physicsBody.velocity = CGVectorMake(-50, 0);
+    
+    droplet.physicsBody.contactTestBitMask = persoCategory;
+    droplet.physicsBody.categoryBitMask = obstacleCategory;
     
     int distanceDroplet = (self.frame.size.height + droplet.size.height * 2);
-
     
-    droplet.zPosition = -11;
-    [droplet setScale : 0.1];
+    
+    
+    
+
+
+    //SKAction *moveDroplet = [SKAction moveTo: CGPointMake(0, 0) duration: 0.01 * _dis];
+    
+    //SKAction *moveDroplet = [SKAction moveTo:(self.frame.size.width, _dis)  duration: 0.01 * _dis];
+    
+   // SKAction *moveDroplet = [SKAction moveToY: distanceDroplet duration: 0.01 * _dis];
+    //SKAction *deleteDroplet = [SKAction removeFromParent];
+    
+    //SKAction *animDroplet = [SKAction repeatActionForever: [SKAction sequence: @[moveDroplet, deleteDroplet]]];
+    
+    
+    droplet.zPosition = -5;
+    [droplet setScale : 0.5];
     
     
     [parentDroplet addChild: droplet];
+   // [parentDroplet runAction: animDroplet];
+    [_sauceNode addChild : parentDroplet];
 }
 
 
