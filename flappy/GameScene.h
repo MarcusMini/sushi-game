@@ -37,6 +37,10 @@
     SKNode * _dropletNode;
     SKNode * _scNode;
     
+    
+    // ----- sprite node --- //
+    
+    
     // ---- BOOLEAN ---- //
     
     BOOL _drapRestart;
@@ -49,6 +53,8 @@
     int  _scoreNumber;
     int _dis;
     int _posNode;
+    int _forceX;
+    int _less;
     
     // create an array of ground array;
     
