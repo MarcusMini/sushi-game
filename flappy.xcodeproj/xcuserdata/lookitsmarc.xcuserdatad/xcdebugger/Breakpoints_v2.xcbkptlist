@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "flappy/GameScene.m"
-            timestampString = "488411140.560102"
+            timestampString = "488493715.306425"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "388"
-            endingLineNumber = "388"
+            startingLineNumber = "386"
+            endingLineNumber = "386"
             landmarkName = "-didBeginContact:"
             landmarkType = "5">
          </BreakpointContent>

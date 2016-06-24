@@ -18,8 +18,6 @@ static const uint32_t mondeCategory = 1 << 4;
 
 -(id) initWithSize:(CGSize)size {
     
-    
-    
     // init scene
     if(self = [super initWithSize:size]){
         [self createContent];
@@ -108,8 +106,8 @@ static const uint32_t mondeCategory = 1 << 4;
     // anim of the city...
     
     SKAction *anim = [SKAction repeatActionForever: [SKAction animateWithTextures: @[user, user_two] timePerFrame:0.2]];
-    SKAction *moveLandscape = [SKAction moveByX: -city.size.width * 0.6  y: 0 duration: 0.1 * city.size.width * 1];
-    SKAction *resetLand = [SKAction moveByX:city.size.width * 0.6 y:0 duration:0];
+    SKAction *moveLandscape = [SKAction moveByX: -city.size.width * 2  y: 0 duration: 0.1 * city.size.width * 2];
+    SKAction *resetLand = [SKAction moveByX:city.size.width * 2 y:0 duration:0];
     SKAction *animLandscape = [SKAction repeatActionForever: [SKAction sequence: @[moveLandscape, resetLand]]];
     
     
@@ -118,9 +116,9 @@ static const uint32_t mondeCategory = 1 << 4;
     
     // anim of the ground
     
-    SKAction *moveGround = [SKAction moveByX: -myTexture.size.width * 2 y: 0 duration: 0.1 * myTexture.size.width * 2];
+    SKAction *moveGround = [SKAction moveByX: -myTexture.size.width  y: 0 duration: 0.1 * myTexture.size.width];
     
-    SKAction *resetGround = [SKAction moveByX:myTexture.size.width * 2 y:0 duration:0];
+    SKAction *resetGround = [SKAction moveByX:myTexture.size.width  y:0 duration:0];
     
     SKAction *animSol = [SKAction repeatActionForever: [SKAction sequence: @[moveGround, resetGround]]];
     
