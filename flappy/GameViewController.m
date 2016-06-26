@@ -8,6 +8,7 @@
 
 #import "GameViewController.h"
 #import "GameScene.h"
+#import "flappy-Swift.h"
 
 @implementation GameViewController
 
@@ -29,6 +30,7 @@
     
     // Present the scene.
     [skView presentScene:scene];
+
 }
 
 - (BOOL)shouldAutorotate

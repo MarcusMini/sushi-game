@@ -7,6 +7,7 @@
 //
 
 #import "GameScene.h"
+#import "flappy-Swift.h"
 
 @implementation GameScene
 
@@ -15,6 +16,8 @@ static const uint32_t obstacleCategory = 1 << 1;
 static const uint32_t scoreCategory = 1 << 2;
 static const uint32_t soyDroplet = 1 << 3;
 static const uint32_t mondeCategory = 1 << 4;
+
+
 
 -(id) initWithSize:(CGSize)size {
     
@@ -429,7 +432,15 @@ static const uint32_t mondeCategory = 1 << 4;
     [_dropletNode removeAllChildren];
     [_noeudMouvment removeAllChildren];
     [self removeAllActions];
-    [self createContent];
+  //  [self createContent];
+    
+    
+    
+    SKScene *ui_scene  = [[createUI alloc ] initWithSize: self.view.bounds.size];
+    
+    
+    
+    [self.view presentScene: ui_scene];
     
 }
 
