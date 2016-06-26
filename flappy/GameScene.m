@@ -430,17 +430,25 @@ static const uint32_t mondeCategory = 1 << 4;
     [_ObstacleGroup removeAllChildren];
     [_sauceNode removeAllChildren];
     [_dropletNode removeAllChildren];
-    [_noeudMouvment removeAllChildren];
+    //[_noeudMouvment removeAllChildren];
     [self removeAllActions];
   //  [self createContent];
     
     
     
-    SKScene *ui_scene  = [[createUI alloc ] initWithSize: self.view.bounds.size];
+//    SKScene *ui_scene  = [[createUI alloc ] initWithSize: self.view.bounds.size];
+//    
+//    
+//    
+//    [self.view presentScene: ui_scene];
     
     
+    SKScene *restart = [[UILoose alloc] initWithSize: self.view.bounds.size userScore: _scoreNumber];
     
-    [self.view presentScene: ui_scene];
+    SKTransition *fadeTransition = [SKTransition fadeWithDuration: 1.0];
+    
+    [self.view presentScene : restart  transition : fadeTransition];
+    
     
 }
 
