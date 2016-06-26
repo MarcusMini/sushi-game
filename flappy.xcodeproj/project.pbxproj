@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9F12036F1D1E79BC001DC8B4 /* flappyUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F12036E1D1E79BC001DC8B4 /* flappyUI.swift */; };
+		9F19F7251D2080AD00A00F06 /* song.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9F19F7241D2080AD00A00F06 /* song.mp3 */; };
 		9F40FA561D0ABCDF007C9510 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F40FA551D0ABCDF007C9510 /* Assets.xcassets */; };
 		9F40FA5A1D0AF907007C9510 /* slkscrb.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9F40FA591D0AF907007C9510 /* slkscrb.ttf */; };
 		9FF7E8351CFD7833004734AE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF7E8341CFD7833004734AE /* main.m */; };
@@ -40,6 +41,7 @@
 
 /* Begin PBXFileReference section */
 		9F12036E1D1E79BC001DC8B4 /* flappyUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = flappyUI.swift; sourceTree = "<group>"; };
+		9F19F7241D2080AD00A00F06 /* song.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song.mp3; sourceTree = "<group>"; };
 		9F40FA551D0ABCDF007C9510 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
 		9F40FA591D0AF907007C9510 /* slkscrb.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = slkscrb.ttf; sourceTree = "<group>"; };
 		9FD3FC791D1DD55D000FE754 /* flappy-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "flappy-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -88,6 +90,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9F19F7231D20809800A00F06 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				9F19F7241D2080AD00A00F06 /* song.mp3 */,
+			);
+			name = Sounds;
+			sourceTree = "<group>";
+		};
 		9FF7E8271CFD7833004734AE = {
 			isa = PBXGroup;
 			children = (
@@ -112,6 +122,7 @@
 		9FF7E8321CFD7833004734AE /* flappy */ = {
 			isa = PBXGroup;
 			children = (
+				9F19F7231D20809800A00F06 /* Sounds */,
 				9F40FA551D0ABCDF007C9510 /* Assets.xcassets */,
 				9F12036E1D1E79BC001DC8B4 /* flappyUI.swift */,
 				9FF7E8361CFD7833004734AE /* AppDelegate.h */,
@@ -264,6 +275,7 @@
 				9FF7E8481CFD7833004734AE /* LaunchScreen.storyboard in Resources */,
 				9F40FA561D0ABCDF007C9510 /* Assets.xcassets in Resources */,
 				9FF7E8431CFD7833004734AE /* Main.storyboard in Resources */,
+				9F19F7251D2080AD00A00F06 /* song.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -126,6 +126,11 @@ static const uint32_t mondeCategory = 1 << 4;
     SKAction *animSol = [SKAction repeatActionForever: [SKAction sequence: @[moveGround, resetGround]]];
     
     
+    // sound action
+    
+    
+    
+    
     
     
     // add texture to user
@@ -216,6 +221,7 @@ static const uint32_t mondeCategory = 1 << 4;
     [self runAction: animNouvelObstacleContinu withKey :@"obstalceAction"];
     [self runAction: animSauce];
     [self runAction: animDroplet];
+    [self runAction: [SKAction playSoundFileNamed: @"song.mp3" waitForCompletion: YES] withKey: @"sounds"];
     [self setBackgroundColor: _fond];
     
     
@@ -430,11 +436,11 @@ static const uint32_t mondeCategory = 1 << 4;
     [_ObstacleGroup removeAllChildren];
     [_sauceNode removeAllChildren];
     [_dropletNode removeAllChildren];
-    //[_noeudMouvment removeAllChildren];
+    [_noeudMouvment removeAllChildren];
+    [self removeActionForKey: @"sounds"];
     [self removeAllActions];
+    
   //  [self createContent];
-    
-    
     
 //    SKScene *ui_scene  = [[createUI alloc ] initWithSize: self.view.bounds.size];
 //    
@@ -444,9 +450,7 @@ static const uint32_t mondeCategory = 1 << 4;
     
     
     SKScene *restart = [[UILoose alloc] initWithSize: self.view.bounds.size userScore: _scoreNumber];
-    
     SKTransition *fadeTransition = [SKTransition fadeWithDuration: 1.0];
-    
     [self.view presentScene : restart  transition : fadeTransition];
     
     

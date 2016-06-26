@@ -39,7 +39,7 @@ class startViewController : UIViewController{
     let scoreButton = SKSpriteNode(imageNamed : "score")
     let soundButton = SKSpriteNode(imageNamed: "sound")
     let bg_color : SKColor = UIColor.init(colorLiteralRed: 120 / 255, green: 156 / 255, blue: 176 / 255, alpha: 1.0)
-    
+
     
     override func didMoveToView(view: SKView) {
         // main func here
@@ -71,7 +71,6 @@ class startViewController : UIViewController{
         self.addChild(soundButton)
     }
     
-    
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
         let touch = touches.first!
@@ -82,9 +81,15 @@ class startViewController : UIViewController{
             let gameScene = GameScene(size: self.view!.bounds.size)
             self.scene!.view?.presentScene(gameScene, transition : transition)
         }
+        else if soundButton.containsPoint(touch.locationInNode(self)){
+            
+            // control the sound
+            
+        }
         
     }
 }
+
 
 
 @objc class UILoose : SKScene{
