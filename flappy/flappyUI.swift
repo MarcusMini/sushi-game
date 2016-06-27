@@ -39,6 +39,10 @@ class startViewController : UIViewController{
     let scoreButton = SKSpriteNode(imageNamed : "score")
     let soundButton = SKSpriteNode(imageNamed: "sound")
     let bg_color : SKColor = UIColor.init(colorLiteralRed: 120 / 255, green: 156 / 255, blue: 176 / 255, alpha: 1.0)
+    
+    // get the score
+    
+    let score = UserScore().getScore()
 
     
     override func didMoveToView(view: SKView) {
@@ -46,11 +50,18 @@ class startViewController : UIViewController{
         self.backgroundColor = bg_color
         posButton()
         createButton()
+        setLabelScore()
+    }
+    
+    
+    func setLabelScore(){
+        let labelScore = SKLabelNode.init(text: "Your high-score is \(score)")
+        labelScore.position = CGPointMake(self.frame.size.width / 2, 20)
+        self.addChild(labelScore)
     }
     
     
     func setName(){
-        
         // set the name of the button in order to know which has been touch
         startButton.name = "start";
         scoreButton.name = "score";
@@ -102,8 +113,16 @@ class startViewController : UIViewController{
     let menuButton : SKSpriteNode = SKSpriteNode(imageNamed: "menu")
     let transition = SKTransition.fadeWithDuration(2.0)
     
+    
     init(size : CGSize, userScore : Int){
         scoreValue = userScore
+        
+        let oldScore = UserScore().getScore()
+        
+        if oldScore < scoreValue{
+            UserScore().setScore(scoreValue)
+        }
+        
         super.init(size: size)
         
     }
@@ -162,6 +181,19 @@ class startViewController : UIViewController{
         }
     }
     
+}
+
+class UserScore : NSUserDefaults{
+    
+    let user_defaults : NSUserDefaults = NSUserDefaults.standardUserDefaults()
+    
+    func setScore(Userscore : Int){
+        user_defaults.setInteger(Userscore, forKey: "flappy-sushi-score")
+    }
+    
+    func getScore() -> Int{
+        return user_defaults.integerForKey("flappy-sushi-score")
+    }
 }
 
 
