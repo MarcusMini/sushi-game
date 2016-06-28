@@ -21,6 +21,7 @@
     SKTexture * _downTube;
     SKTexture * _soySauceBottle;
     SKTexture * _droplet;
+    SKTexture * _heartTexture;
     
     
     // ---- DEFINE ACTION --- //
@@ -36,6 +37,7 @@
     SKNode * _sauceNode;
     SKNode * _dropletNode;
     SKNode * _scNode;
+    SKNode * _heartNode;
     
     
     // ----- sprite node --- //
@@ -50,11 +52,15 @@
     SKSpriteNode * _citySprite;
     SKSpriteNode * _aSprite;
     
+    
+    // ---- INT ----- //
+    
     int  _scoreNumber;
     int _dis;
     int _posNode;
     int _forceX;
     int _less;
+    int _life;
     
     // create an array of ground array;
     

@@ -38,7 +38,7 @@ static const uint32_t mondeCategory = 1 << 4;
     _sauceNode = [SKNode node];
     _dropletNode = [SKNode node];
     _less = 400;
-    
+    _life  = 4;
     _forceX = -100;
     
     self.physicsWorld.contactDelegate = self;
@@ -77,6 +77,7 @@ static const uint32_t mondeCategory = 1 << 4;
     _downTube = [atlas textureNamed: @"chopstick_two"];
     _soySauceBottle = [atlas textureNamed : @"soy_sauce_bottle"];
     _droplet = [atlas textureNamed:@"soy-sauce-droplet"];
+    _heartTexture = [atlas textureNamed:@"heart"];
     
     
     // call create obstacle
@@ -128,11 +129,7 @@ static const uint32_t mondeCategory = 1 << 4;
     
     // sound action
     
-    
-    
-    
-    
-    
+
     // add texture to user
     
     _perso = [SKSpriteNode spriteNodeWithTexture: user];
@@ -223,6 +220,7 @@ static const uint32_t mondeCategory = 1 << 4;
     [self runAction: animDroplet];
     [self runAction: [SKAction playSoundFileNamed: @"song.mp3" waitForCompletion: YES] withKey: @"sounds"];
     [self setBackgroundColor: _fond];
+    [self createHeart];
     
     
     // update the gravity
@@ -315,6 +313,24 @@ static const uint32_t mondeCategory = 1 << 4;
     [_ObstacleGroup addChild: _bar];
 }
 
+-(void) createHeart{
+    int counter = 0;
+    int invertcounter = 4;
+    
+    while(counter < _life){
+        SKSpriteNode *heart = [SKSpriteNode spriteNodeWithTexture: _heartTexture];
+        heart.position = CGPointMake((invertcounter * 20 + 20), self.frame.size.height - 20);
+        [heart setScale: 0.5];
+        [heart setName: @"heart"];
+        [self addChild: heart];
+        ++counter;
+        --invertcounter;
+    }
+    
+   
+    
+}
+
 
 -(void) createSoySauce{
     
@@ -395,10 +411,17 @@ static const uint32_t mondeCategory = 1 << 4;
 - (void)didBeginContact:(SKPhysicsContact *) contact {
     if(((contact.bodyA.categoryBitMask & obstacleCategory) == obstacleCategory)){
  
-        if(_noeudMouvment.speed > 0){
+        if(_noeudMouvment.speed > 0 && _life == 0){
               _noeudMouvment.speed = 0;
               _disableUserInput = YES;
               [self reset];
+        } else{
+            --_life;
+            [[self childNodeWithName: @"heart"] removeFromParent];
+            
+//            for(SKSpriteNode *object in _heartNode){
+//                [object removeFromParent];
+//            }
         }
     }
     else if(((contact.bodyA.categoryBitMask & scoreCategory) == scoreCategory)){
@@ -440,7 +463,7 @@ static const uint32_t mondeCategory = 1 << 4;
     [self removeActionForKey: @"sounds"];
     [self removeAllActions];
     
-  //  [self createContent];
+//  [self createContent];
     
 //    SKScene *ui_scene  = [[createUI alloc ] initWithSize: self.view.bounds.size];
 //    
