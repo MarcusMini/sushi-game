@@ -33,6 +33,9 @@ static const uint32_t mondeCategory = 1 << 4;
 
 -(void) createContent{
     
+    NSURL *url = [NSURL fileURLWithPath: [[NSBundle mainBundle] pathForResource : @"song" ofType: @"mp3"]];
+    
+    audio = [[AVAudioPlayer alloc] initWithContentsOfURL: url error: NULL];
     _noeudMouvment = [SKNode node];
     _ObstacleGroup = [SKNode node];
     _sauceNode = [SKNode node];
@@ -218,12 +221,21 @@ static const uint32_t mondeCategory = 1 << 4;
     [self runAction: animNouvelObstacleContinu withKey :@"obstalceAction"];
     [self runAction: animSauce];
     [self runAction: animDroplet];
-    [self runAction: [SKAction playSoundFileNamed: @"song.mp3" waitForCompletion: YES] withKey: @"sounds"];
+//    [self runAction: [SKAction playSoundFileNamed: @"song.mp3" waitForCompletion: YES] withKey: @"sounds"];
     [self setBackgroundColor: _fond];
     [self createHeart];
     
     
     // update the gravity
+    // start playing the sound
+    
+    
+    bool canWePlay = [[NSUserDefaults standardUserDefaults] boolForKey: @"sound_preference"];
+    
+    if(canWePlay){
+        [audio play];
+    }
+    
     
     self.physicsWorld.gravity = CGVectorMake(0.0, -1.0);
     
@@ -326,9 +338,6 @@ static const uint32_t mondeCategory = 1 << 4;
         ++counter;
         --invertcounter;
     }
-    
-   
-    
 }
 
 
@@ -414,14 +423,11 @@ static const uint32_t mondeCategory = 1 << 4;
         if(_noeudMouvment.speed > 0 && _life == 0){
               _noeudMouvment.speed = 0;
               _disableUserInput = YES;
+              [audio stop];
               [self reset];
         } else{
             --_life;
             [[self childNodeWithName: @"heart"] removeFromParent];
-            
-//            for(SKSpriteNode *object in _heartNode){
-//                [object removeFromParent];
-//            }
         }
     }
     else if(((contact.bodyA.categoryBitMask & scoreCategory) == scoreCategory)){
@@ -460,7 +466,7 @@ static const uint32_t mondeCategory = 1 << 4;
     [_sauceNode removeAllChildren];
     [_dropletNode removeAllChildren];
     [_noeudMouvment removeAllChildren];
-    [self removeActionForKey: @"sounds"];
+   // [self removeActionForKey: @"sounds"];
     [self removeAllActions];
     
 //  [self createContent];

@@ -34,10 +34,9 @@ class startViewController : UIViewController{
 
 @objc class createUI : SKScene{
     
-    
+    let soundButton : SKSpriteNode = SKSpriteNode(imageNamed: "sound")
     let startButton = SKSpriteNode(imageNamed: "start")
-    let scoreButton = SKSpriteNode(imageNamed : "score")
-    let soundButton = SKSpriteNode(imageNamed: "sound")
+    
     let bg_color : SKColor = UIColor.init(colorLiteralRed: 120 / 255, green: 156 / 255, blue: 176 / 255, alpha: 1.0)
     
     // get the score
@@ -45,12 +44,37 @@ class startViewController : UIViewController{
     let score = UserScore().getScore()
 
     
+    override init(size : CGSize){
+        super.init(size: size)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+  
     override func didMoveToView(view: SKView) {
         // main func here
         self.backgroundColor = bg_color
         posButton()
         createButton()
         setLabelScore()
+        chooseImage()
+    }
+    
+    
+    func chooseImage() -> Bool{
+        let pref : Bool =  SoundPreference().getSoundPref()
+        print(pref)
+        if pref != false{
+           soundButton.texture = SKTexture(imageNamed: "sound")
+        } else{
+           soundButton.texture = SKTexture(imageNamed: "nosound")
+        }
+        
+        
+        return pref
     }
     
     
@@ -64,21 +88,22 @@ class startViewController : UIViewController{
     func setName(){
         // set the name of the button in order to know which has been touch
         startButton.name = "start";
-        scoreButton.name = "score";
         soundButton.name = "sound";
     }
     
     
     func posButton(){
         startButton.position = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2 + 50)
-        scoreButton.position = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2)
-        soundButton.position = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2 - 50)
+        soundButton.position = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2)
     }
     
     
     func createButton(){
+        
+        // change button image 
+        
+        
         self.addChild(startButton)
-        self.addChild(scoreButton)
         self.addChild(soundButton)
     }
     
@@ -88,11 +113,17 @@ class startViewController : UIViewController{
         
         if startButton.containsPoint(touch.locationInNode(self)){
             // instantiate the game scene
+            print("click la")
             let transition = SKTransition.fadeWithDuration(2.0)
             let gameScene = GameScene(size: self.view!.bounds.size)
             self.scene!.view?.presentScene(gameScene, transition : transition)
         }
         else if soundButton.containsPoint(touch.locationInNode(self)){
+            print("click")
+            let currentpref = chooseImage()
+            
+            SoundPreference().setSounds(!currentpref)
+            chooseImage()
             
             // control the sound
             
@@ -193,6 +224,19 @@ class UserScore : NSUserDefaults{
     
     func getScore() -> Int{
         return user_defaults.integerForKey("flappy-sushi-score")
+    }
+}
+
+
+class SoundPreference : NSUserDefaults{
+    let sound_preference : NSUserDefaults = NSUserDefaults.standardUserDefaults()
+    
+    func setSounds(ShouldPlay : Bool){
+        sound_preference.setBool(ShouldPlay, forKey: "sound_preference")
+    }
+    
+    func getSoundPref() -> Bool{
+        return sound_preference.boolForKey("sound_preference")
     }
 }
 

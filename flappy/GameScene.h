@@ -7,6 +7,7 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+@import AVFoundation;
 
 @interface GameScene : SKScene <SKPhysicsContactDelegate>{
     SKSpriteNode * _perso;
@@ -61,6 +62,10 @@
     int _forceX;
     int _less;
     int _life;
+    
+    
+    // ---- SOUND ---- //
+    AVAudioPlayer *audio;
     
     // create an array of ground array;
     
