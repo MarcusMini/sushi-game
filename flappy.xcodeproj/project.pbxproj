@@ -11,6 +11,7 @@
 		9F19F7251D2080AD00A00F06 /* song.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9F19F7241D2080AD00A00F06 /* song.mp3 */; };
 		9F40FA561D0ABCDF007C9510 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F40FA551D0ABCDF007C9510 /* Assets.xcassets */; };
 		9F40FA5A1D0AF907007C9510 /* slkscrb.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9F40FA591D0AF907007C9510 /* slkscrb.ttf */; };
+		9FB52BC81D25C5DB0074CD51 /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF7E83A1CFD7833004734AE /* GameScene.m */; };
 		9FF7E8351CFD7833004734AE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF7E8341CFD7833004734AE /* main.m */; };
 		9FF7E8381CFD7833004734AE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF7E8371CFD7833004734AE /* AppDelegate.m */; };
 		9FF7E83B1CFD7833004734AE /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF7E83A1CFD7833004734AE /* GameScene.m */; };
@@ -320,6 +321,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9FB52BC81D25C5DB0074CD51 /* GameScene.m in Sources */,
 				9FF7E85E1CFD7833004734AE /* flappyUITests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

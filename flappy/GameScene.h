@@ -39,6 +39,7 @@
     SKNode * _dropletNode;
     SKNode * _scNode;
     SKNode * _heartNode;
+    SKNode * _leftCollider;
     
     
     // ----- sprite node --- //
@@ -66,21 +67,6 @@
     
     // ---- SOUND ---- //
     AVAudioPlayer *audio;
-    
-    // create an array of ground array;
-    
-    
-    // Remarks
-    
-    /* 
-     
-     Variable set with * are pointers.
-     Do not break them... in order to not 
-     get EXC_BAD_ACCESS error..
-     
-     */
-    
-    
 }
 
 @end

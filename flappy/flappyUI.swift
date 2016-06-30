@@ -24,15 +24,19 @@ class startViewController : UIViewController{
         
         let startScene = createUI(size: startView.bounds.size)
         
-      //  let loose = looseUI(size: startView.bounds.size)
+        //  let loose = looseUI(size: startView.bounds.size)
         
         startScene.scaleMode = .AspectFill
         startView.presentScene(startScene)
     }
 }
 
+// @objc prefix allow objective c to call the swift class
+
 
 @objc class createUI : SKScene{
+    
+    // create the button
     
     let soundButton : SKSpriteNode = SKSpriteNode(imageNamed: "sound")
     let startButton = SKSpriteNode(imageNamed: "start")
@@ -53,7 +57,6 @@ class startViewController : UIViewController{
     }
     
     
-  
     override func didMoveToView(view: SKView) {
         // main func here
         self.backgroundColor = bg_color
@@ -64,6 +67,7 @@ class startViewController : UIViewController{
     }
     
     
+    // reset the sound button by checking the preference
     func chooseImage() -> Bool{
         let pref : Bool =  SoundPreference().getSoundPref()
         print(pref)
@@ -119,7 +123,6 @@ class startViewController : UIViewController{
             self.scene!.view?.presentScene(gameScene, transition : transition)
         }
         else if soundButton.containsPoint(touch.locationInNode(self)){
-            print("click")
             let currentpref = chooseImage()
             
             SoundPreference().setSounds(!currentpref)
@@ -214,8 +217,11 @@ class startViewController : UIViewController{
     
 }
 
+// user pref
+
 class UserScore : NSUserDefaults{
     
+    // init the user default object
     let user_defaults : NSUserDefaults = NSUserDefaults.standardUserDefaults()
     
     func setScore(Userscore : Int){

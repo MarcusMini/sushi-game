@@ -16,7 +16,7 @@ static const uint32_t obstacleCategory = 1 << 1;
 static const uint32_t scoreCategory = 1 << 2;
 static const uint32_t soyDroplet = 1 << 3;
 static const uint32_t mondeCategory = 1 << 4;
-
+static const uint32_t killCategory = 1 << 5;
 
 
 -(id) initWithSize:(CGSize)size {
@@ -25,7 +25,7 @@ static const uint32_t mondeCategory = 1 << 4;
     if(self = [super initWithSize:size]){
         [self createContent];
     }
-    
+
     
     return self;
 }
@@ -33,40 +33,55 @@ static const uint32_t mondeCategory = 1 << 4;
 
 -(void) createContent{
     
+    // get the file path of the sound
     NSURL *url = [NSURL fileURLWithPath: [[NSBundle mainBundle] pathForResource : @"song" ofType: @"mp3"]];
     
+    // init the audio player
+    
     audio = [[AVAudioPlayer alloc] initWithContentsOfURL: url error: NULL];
+    
+    
+    // --- INIT NODE --- //
+    
     _noeudMouvment = [SKNode node];
     _ObstacleGroup = [SKNode node];
     _sauceNode = [SKNode node];
     _dropletNode = [SKNode node];
-    _less = 400;
-    _life  = 4;
-    _forceX = -100;
+    _leftCollider = [SKNode node];
+    
+    // --- INIT VALUE --- //
+    
+    _less = 400;    // Based value which is use to control the force of the sushi
+    
+    _life = 4;  // life of the sushi
+    
+    _forceX = -100; // trick in order to align the droplet of soy sauce
     
     self.physicsWorld.contactDelegate = self;
+    
+    // loop value
     int looper = 0;
     int looperCity = 0;
+    
+    // width of the texture
     int sizeT = 0;
     int sizeC = 0;
     
-    _drapRestart = NO;
+    
+    // allow the user to interact with the sushi
     _disableUserInput = NO;
     
-    // config scene
-    
-    //_perso = [SKSpriteNode spriteNodeWithColor:[UIColor blueColor] size:CGSizeMake(50,50)];
-    
-    _scoreNumber = 0;
     // add the score...
+    _scoreNumber = 0;
     _scoreCounter = [SKLabelNode labelNodeWithFontNamed:@"slkscrb.ttf"];
     _scoreCounter.text = 0;
     _scoreCounter.position = CGPointMake(self.size.width / 2, self.size.height / 1.5);
     _scoreCounter.fontSize = 35;
     
+    // add background color
     _fond = [SKColor colorWithRed: 120.0 / 255.0 green: 156.0 / 255.0 blue: 176.0 / 255.0 alpha:1.0];
     
-    
+    // atlas
     SKTextureAtlas *atlas = [SKTextureAtlas atlasNamed: @"Sprites"];
     
     
@@ -97,49 +112,37 @@ static const uint32_t mondeCategory = 1 << 4;
     SKAction *soySauceAction = [SKAction performSelector: @selector(createSoySauce) onTarget:self];
     SKAction *pauseSauce = [SKAction waitForDuration: 10.0];
     SKAction *animNewSoySauceObstalce = [SKAction sequence:@[soySauceAction, pauseSauce]];
-    
     SKAction *animSauce = [SKAction repeatActionForever: animNewSoySauceObstalce];
     
-    
-    // create droplet anim
+    // create droplet anim of the soy sauce
     
     SKAction *dropletAction = [SKAction performSelector: @selector(createDropplet) onTarget:self];
-    
     SKAction *pauseDroplet = [SKAction waitForDuration: 1.0];
     SKAction *animDropletObstacle = [SKAction sequence: @[dropletAction, pauseDroplet]];
-    
     SKAction *animDroplet = [SKAction repeatActionForever: animDropletObstacle];
     
-    // anim of the city...
+    // anim of the restaurant...
     
     SKAction *anim = [SKAction repeatActionForever: [SKAction animateWithTextures: @[user, user_two] timePerFrame:0.2]];
     SKAction *moveLandscape = [SKAction moveByX: -city.size.width * 2  y: 0 duration: 0.1 * city.size.width * 2];
     SKAction *resetLand = [SKAction moveByX:city.size.width * 2 y:0 duration:0];
     SKAction *animLandscape = [SKAction repeatActionForever: [SKAction sequence: @[moveLandscape, resetLand]]];
     
-    
-    // anim of the user
-    
-    
-    // anim of the ground
+
+    // anim of the ground (seats)
     
     SKAction *moveGround = [SKAction moveByX: -myTexture.size.width  y: 0 duration: 0.1 * myTexture.size.width];
     
     SKAction *resetGround = [SKAction moveByX:myTexture.size.width  y:0 duration:0];
-    
     SKAction *animSol = [SKAction repeatActionForever: [SKAction sequence: @[moveGround, resetGround]]];
     
-    
-    // sound action
-    
-
     // add texture to user
     
     _perso = [SKSpriteNode spriteNodeWithTexture: user];
     _perso.position = CGPointMake(self.frame.size.width / 6, self.frame.size.height / 2);
     
     
-    // add physics
+    // add physics to the user
     
     
     _perso.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius: _perso.size.height / 2];
@@ -149,16 +152,14 @@ static const uint32_t mondeCategory = 1 << 4;
     _perso.physicsBody.affectedByGravity = YES;
     // he's not affected by the rotation
     _perso.physicsBody.allowsRotation = NO;
-    
     _perso.physicsBody.velocity = CGVectorMake(0, 0);
-    
     _perso.physicsBody.categoryBitMask = persoCategory;
     _perso.physicsBody.collisionBitMask = mondeCategory | obstacleCategory | soyDroplet;
     _perso.physicsBody.contactTestBitMask = mondeCategory | obstacleCategory | soyDroplet;
     
     
     
-    // apply the texture
+    // apply the texture of the seats
     
     
     while(looper < (self.frame.size.width + sizeT)){
@@ -170,13 +171,10 @@ static const uint32_t mondeCategory = 1 << 4;
         [_aSprite runAction: animSol withKey: @"ground"];
         sizeT = _aSprite.size.width;
         
-        
         _heightGround = (CGFloat) _aSprite.size.height;
         _widthGround =  (CGFloat) looper;
         
     }
-    
-    
     
     
     // create an empty sprite which simulated the physics of the ground
@@ -191,8 +189,7 @@ static const uint32_t mondeCategory = 1 << 4;
     
     
     
-    // add the city background
-    
+    // add the restaurant
     
     while(looperCity < (self.frame.size.width + sizeC)){
         _citySprite = [SKSpriteNode spriteNodeWithTexture: city];
@@ -206,8 +203,17 @@ static const uint32_t mondeCategory = 1 << 4;
     }
     
     
+    // add the left collider in order for the sushi to not get out of the window
     
-    // SKSpriteNode *aSprite = [SKSpriteNode spriteNodeWithTexture: myTexture];
+    
+    _leftCollider.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize: CGSizeMake(1.0, self.frame.size.height * 2)];
+    
+    _leftCollider.position = CGPointMake(0,0);
+    _leftCollider.physicsBody.dynamic = NO;
+    
+    _leftCollider.physicsBody.categoryBitMask = killCategory;
+    _leftCollider.physicsBody.contactTestBitMask = persoCategory;
+    
     
     [self addChild: _noeudMouvment];
     [_noeudMouvment addChild : ground];
@@ -218,18 +224,20 @@ static const uint32_t mondeCategory = 1 << 4;
     [_noeudMouvment addChild: _ObstacleGroup];
     [_noeudMouvment addChild: _sauceNode];
     [_noeudMouvment addChild: _dropletNode];
+    [self addChild: _leftCollider];
     [self runAction: animNouvelObstacleContinu withKey :@"obstalceAction"];
     [self runAction: animSauce];
     [self runAction: animDroplet];
-//    [self runAction: [SKAction playSoundFileNamed: @"song.mp3" waitForCompletion: YES] withKey: @"sounds"];
     [self setBackgroundColor: _fond];
     [self createHeart];
+    
     
     
     // update the gravity
     // start playing the sound
     
     
+    // get it's user preference
     bool canWePlay = [[NSUserDefaults standardUserDefaults] boolForKey: @"sound_preference"];
     
     if(canWePlay){
@@ -243,20 +251,20 @@ static const uint32_t mondeCategory = 1 << 4;
 }
 
 -(void) createObstacle{
+    // space
     const double space_const = 100;
-    // get the atlas
     
     int posy = 0;
+    
+    // get the texture
     CGFloat textureSizeX = 0;
     CGFloat textureSizeY = 0;
     
-
     textureSizeX = _upperTube.size.width;
     textureSizeY = _upperTube.size.height;
     
     
     // create node
-    
     
     _bar = [SKNode node];
     _bar.position = CGPointMake(self.frame.size.width + (_upperTube.size.width), 0);
@@ -266,7 +274,7 @@ static const uint32_t mondeCategory = 1 << 4;
     
     posy = arc4random_uniform((self.frame.size.height) / 3);
     
-    // define sprite
+    // define sprite of the chopsticks
     
     SKSpriteNode *downSprite = [SKSpriteNode spriteNodeWithTexture: _upperTube];
     downSprite.position = CGPointMake(0, posy);
@@ -274,16 +282,13 @@ static const uint32_t mondeCategory = 1 << 4;
     SKSpriteNode *upSprite = [SKSpriteNode spriteNodeWithTexture: _downTube];
     upSprite.position = CGPointMake(0, (posy+downSprite.size.height+ space_const));
     
-    // add physics
+    // add physics and set it
     
     downSprite.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize: CGSizeMake(textureSizeX, textureSizeY)];
     upSprite.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize: CGSizeMake(textureSizeX, textureSizeY)];
     
-    
     downSprite.physicsBody.dynamic = NO;
     upSprite.physicsBody.dynamic = NO;
-    
-    
     
     downSprite.physicsBody.contactTestBitMask = persoCategory;
     downSprite.physicsBody.categoryBitMask = obstacleCategory;
@@ -297,7 +302,6 @@ static const uint32_t mondeCategory = 1 << 4;
     
     CGSize sizeCollider = CGSizeMake((downSprite.size.width - 3), (downSprite.size.height - space_const ));
   
-    //SKNode *scoreNode = [SKNode node];
     SKNode *scoreNode = [SKSpriteNode spriteNodeWithColor: [SKColor colorWithRed: 0 green:0 blue:0 alpha:0]  size: CGSizeMake((downSprite.size.width - 3), downSprite.size.height - space_const)];
     
     scoreNode.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize: sizeCollider];
@@ -308,9 +312,9 @@ static const uint32_t mondeCategory = 1 << 4;
     scoreNode.physicsBody.contactTestBitMask = persoCategory;
     scoreNode.physicsBody.categoryBitMask = scoreCategory;
     
-
-
     int distance = (self.frame.size.width + (textureSizeX * 2));
+    
+    // define action
     
     SKAction *bougerObstacle = [SKAction moveByX: -distance y : 0 duration: 0.01 * distance];
     SKAction *supprimerObstacle = [SKAction removeFromParent];
@@ -318,7 +322,6 @@ static const uint32_t mondeCategory = 1 << 4;
      SKAction *animObs = [SKAction repeatActionForever: [SKAction sequence: @[bougerObstacle, supprimerObstacle]]];
     
     [_bar runAction: animObs];
-    
     [_bar addChild : downSprite];
     [_bar addChild : upSprite];
     [_bar addChild: scoreNode];
@@ -326,9 +329,13 @@ static const uint32_t mondeCategory = 1 << 4;
 }
 
 -(void) createHeart{
+    
+    // create life
+    
     int counter = 0;
     int invertcounter = 4;
     
+    // create the heart and add it on the scene
     while(counter < _life){
         SKSpriteNode *heart = [SKSpriteNode spriteNodeWithTexture: _heartTexture];
         heart.position = CGPointMake((invertcounter * 20 + 20), self.frame.size.height - 20);
@@ -343,23 +350,25 @@ static const uint32_t mondeCategory = 1 << 4;
 
 -(void) createSoySauce{
     
-    NSLog(@"created soy ");
+    // create soy sauce bottle
     
     _scNode = [SKNode node];
     SKSpriteNode *soySauceNode = [SKSpriteNode spriteNodeWithTexture: _soySauceBottle];
     
+    // position soy sauce
     soySauceNode.position = CGPointMake(self.frame.size.width + 50, (self.frame.size.height - 10));
     soySauceNode.zPosition = -10;
     [soySauceNode setScale: 0.2];
     
     _dis = (self.frame.size.width + _soySauceBottle.size.width * 2);
     
+    // set the actions of the soy sauce bottle
     SKAction *moveSauceBottle = [SKAction moveByX : - _dis y: 0 duration: 0.01 * _dis];
     SKAction *deleteSauceBottle = [SKAction removeFromParent];
     
     SKAction *animSoy = [SKAction repeatActionForever: [SKAction sequence: @[moveSauceBottle, deleteSauceBottle]]];
     
-
+    // run action and add node
     [_scNode addChild: soySauceNode];
     [_scNode runAction: animSoy];
     [_sauceNode addChild: _scNode];
@@ -368,8 +377,8 @@ static const uint32_t mondeCategory = 1 << 4;
 
 -(void) createDropplet{
     
+    // create the droplet of soy sauce
     CGPoint vPos = [_sauceNode convertPoint:_scNode.position toNode:self];
-   // NSLog(@"%@",NSStringFromCGPoint(vPos));
     
     SKNode *parentDroplet = [SKNode node];
     SKSpriteNode *droplet = [SKSpriteNode spriteNodeWithTexture: _droplet];
@@ -377,10 +386,10 @@ static const uint32_t mondeCategory = 1 << 4;
     droplet.position = CGPointMake((vPos.x + (self.frame.size.width + 50)), self.frame.size.height - 50);
     droplet.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius: 10.0];
     
-  
-
     droplet.physicsBody.dynamic = YES;
     droplet.physicsBody.affectedByGravity = YES;
+    
+    // use force_x to counter force of user
     droplet.physicsBody.velocity = CGVectorMake(_forceX, 0);
     
   
@@ -390,15 +399,12 @@ static const uint32_t mondeCategory = 1 << 4;
     droplet.physicsBody.contactTestBitMask = persoCategory | mondeCategory;
     droplet.physicsBody.categoryBitMask = soyDroplet;
     
-    
-    // static action .. do nothing to the droplet
     SKAction *pause_droplet = [SKAction waitForDuration: 10];
     
     // we want to remove the droplet
     SKAction *delete_droplet = [SKAction removeFromParent];
     
     SKAction *animObs = [SKAction repeatActionForever: [SKAction sequence: @[pause_droplet, delete_droplet]]];
-    
     
     [parentDroplet addChild: droplet];
     [parentDroplet runAction: animObs];
@@ -407,10 +413,6 @@ static const uint32_t mondeCategory = 1 << 4;
 
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    /* Called when a touch begins */
-    
-    // if the user touch an obstacle -> disable the user interaction with the player
-    
     if(!_disableUserInput){
         [_perso.physicsBody applyImpulse: CGVectorMake(0,_less)];
     }
@@ -420,17 +422,22 @@ static const uint32_t mondeCategory = 1 << 4;
 - (void)didBeginContact:(SKPhysicsContact *) contact {
     if(((contact.bodyA.categoryBitMask & obstacleCategory) == obstacleCategory)){
  
+        // stop the game
         if(_noeudMouvment.speed > 0 && _life == 0){
+            
+             // disable user input
               _noeudMouvment.speed = 0;
               _disableUserInput = YES;
               [audio stop];
               [self reset];
         } else{
+            // reduce life of the sushi
             --_life;
             [[self childNodeWithName: @"heart"] removeFromParent];
         }
     }
     else if(((contact.bodyA.categoryBitMask & scoreCategory) == scoreCategory)){
+        // score counter
         ++_scoreNumber;
         _scoreCounter.text = [NSString stringWithFormat:@"%i", _scoreNumber];
     }
@@ -438,50 +445,30 @@ static const uint32_t mondeCategory = 1 << 4;
         // reduce the ability of the user to control it's sushi
         _less = _less - 50;
     }
-    else if(_drapRestart){
-       // NSLog(@"ici");
-       // [self reinitScene];
+    else if(((contact.bodyA.categoryBitMask & killCategory) == killCategory)){
+        // if the sushi touch the left collider -> user loose
+        
+        _life = 0;
+        [audio stop];
+        [self reset];
     }
     else{
         [self removeActionForKey:@"collision"];
     }
 }
 
--(void) stop{
-    NSLog(@"ici");
-    
-
-    _perso.position = CGPointMake(0,0);
-    _perso.physicsBody.velocity = CGVectorMake(0, 0);
-    NSLog(@"%f", _perso.position.y);
-    
-    //_noeudMouvment.speed = 0;
-    //_drapRestart = NO;
-    
-}
-
-
 -(void) reset{
+    // remove everything...
     [_ObstacleGroup removeAllChildren];
     [_sauceNode removeAllChildren];
     [_dropletNode removeAllChildren];
     [_noeudMouvment removeAllChildren];
-   // [self removeActionForKey: @"sounds"];
     [self removeAllActions];
-    
-//  [self createContent];
-    
-//    SKScene *ui_scene  = [[createUI alloc ] initWithSize: self.view.bounds.size];
-//    
-//    
-//    
-//    [self.view presentScene: ui_scene];
-    
-    
+
+    // instantiate the loose UI class -> flappyUI.swift
     SKScene *restart = [[UILoose alloc] initWithSize: self.view.bounds.size userScore: _scoreNumber];
     SKTransition *fadeTransition = [SKTransition fadeWithDuration: 1.0];
     [self.view presentScene : restart  transition : fadeTransition];
-    
     
 }
 
